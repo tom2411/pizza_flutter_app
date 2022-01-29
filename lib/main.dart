@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 void main() {
@@ -73,6 +74,14 @@ class MyApp extends StatelessWidget {
         ),
         body: ListView(
           children: [
+            CachedNetworkImage(
+              imageUrl: "https://assets.afcdn.com/recipe/20160519/15342_w1024h768c1cx3504cy2338.webp",
+              placeholder: (context,url) => Center(child: CircularProgressIndicator()),
+              errorWidget: (context,url, error) => Icon(Icons.error),
+              width: 600,
+              height: 240,
+              fit: BoxFit.cover,
+            ),
            /* Image.asset( image avec des assets dans le dossier images
               'images/pizza.png',
               width: 600,
@@ -85,16 +94,10 @@ class MyApp extends StatelessWidget {
               height: 200,
               fit: BoxFit.cover,
             ),*/
-            FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: 'https://assets.afcdn.com/recipe/20160519/15342_w600.jpg',
-              width: 600,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
             titleSection,
             buttonSection,
             descriptionSection,
+
           ]
         ),
       )
