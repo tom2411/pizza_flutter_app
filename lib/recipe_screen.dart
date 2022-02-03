@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/favoriteChangenotifier.dart';
 import 'package:flutter_app/favoriteWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_app/recipe.dart';
+import 'package:provider/provider.dart';
 
 class RecipeScreen extends StatelessWidget {
 
+  final Recipe recipe;
+
+  const RecipeScreen({Key? key, required this.recipe}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-
     Widget titleSection = Container(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -17,11 +23,11 @@ class RecipeScreen extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Text("Pizza Facile",
+                  child: Text(recipe.title,
                       style: TextStyle( fontWeight: FontWeight.bold, fontSize: 20
                       )),
                 ),
-                Text("Par Tom Ribardière",
+                Text(recipe.user,
                     style: TextStyle(
                         color: Colors.grey[500],
                         fontSize: 16
@@ -29,7 +35,8 @@ class RecipeScreen extends StatelessWidget {
               ],
             ),
           ),
-          FavoriteWidget(isFavorited: true, favoriteCount: 10),
+          FavoriteIconWidget(),
+          FavoriteTextWidget(),
         ],
       ),
     );
@@ -65,42 +72,45 @@ class RecipeScreen extends StatelessWidget {
 
     Widget descriptionSection = Container(
       padding: const EdgeInsets.all(12),
-      child: Text("Faire cuire dans une poêle les lardons et le champignons. \nDans un bol, verser la boîte de concentré de tomate, y ajouter un demi verre d'eau, ensuite mettre un carré de sucre (pour enlever l'acidité de la tomate) une pincée de sel, de poivre, d'herbes de Provence.",
+      child: Text(recipe.description,
           softWrap: true
       ),
     );
 
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Mes Recettes"),
-      ),
-      body: ListView(
-          children: [
-            CachedNetworkImage(
-              imageUrl: "https://assets.afcdn.com/recipe/20160519/15342_w1024h768c1cx3504cy2338.webp",
-              placeholder: (context,url) => Center(child: CircularProgressIndicator()),
-              errorWidget: (context,url, error) => Icon(Icons.error),
+    return ChangeNotifierProvider(
+      create: (context) => FavoriteChangeNotifier(recipe.isFavorite, recipe.favoriteCount),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Mes Recettes"),
+        ),
+        body: ListView(
+            children: [
+              CachedNetworkImage(
+                imageUrl: recipe.imageUrl,
+                placeholder: (context,url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context,url, error) => Icon(Icons.error),
+                width: 600,
+                height: 240,
+                fit: BoxFit.cover,
+              ),
+              /* Image.asset( image avec des assets dans le dossier images
+              'images/pizza.png',
               width: 600,
-              height: 240,
+              height: 200,
               fit: BoxFit.cover,
-            ),
-            /* Image.asset( image avec des assets dans le dossier images
-            'images/pizza.png',
-            width: 600,
-            height: 200,
-            fit: BoxFit.cover,
-          ),*/
-            /* Image.network( image par URL
-            'https://assets.afcdn.com/recipe/20160519/15342_w600.jpg',
-            width: 600,
-            height: 200,
-            fit: BoxFit.cover,
-          ),*/
-            titleSection,
-            buttonSection,
-            descriptionSection,
-          ]
+            ),*/
+              /* Image.network( image par URL
+              'https://assets.afcdn.com/recipe/20160519/15342_w600.jpg',
+              width: 600,
+              height: 200,
+              fit: BoxFit.cover,
+            ),*/
+              titleSection,
+              buttonSection,
+              descriptionSection,
+            ]
+        ),
       ),
     );
   }

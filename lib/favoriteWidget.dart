@@ -1,45 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/favoriteChangenotifier.dart';
+import 'package:provider/provider.dart';
 
-class FavoriteWidget extends StatefulWidget{
-  final bool isFavorited;
-  final int favoriteCount;
+class FavoriteIconWidget extends StatefulWidget{
 
-  const FavoriteWidget({Key? key, required this.isFavorited, required this.favoriteCount}) : super(key: key);
-
-  _FavoriteWidgetState createState() => _FavoriteWidgetState(this.isFavorited, this.favoriteCount);
+  _FavoriteIconWidgetState createState() => _FavoriteIconWidgetState();
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget>{
+class _FavoriteIconWidgetState extends State<FavoriteIconWidget>{
 
-  bool _isFavorited;
-  int _favoriteCount;
+  late bool _isFavorited;
 
-  _FavoriteWidgetState(this._isFavorited, this._favoriteCount);
-
-  void _toggleFavorite(){
+  void _toggleFavorite(FavoriteChangeNotifier _notifier){
     setState(() {
       if (_isFavorited){
         _isFavorited = false;
-        _favoriteCount-=1;
       }else{
         _isFavorited = true;
-        _favoriteCount+=1;
       }
+
+      _notifier.isFavorited = _isFavorited;
     });
   }
 
   @override
   Widget build(BuildContext context){
-    return Row(
-      children: [
-        IconButton(
+    FavoriteChangeNotifier _notifier = Provider.of<FavoriteChangeNotifier>(context);
+
+    _isFavorited = _notifier.isFavorited;
+
+    return IconButton(
           icon : _isFavorited? Icon(Icons.favorite): Icon(Icons.favorite_border),
           color: Colors.red,
-          onPressed: _toggleFavorite,
-        ),
-        Text('$_favoriteCount'),
-      ],
-    );
+          onPressed: ()=>_toggleFavorite(_notifier),
+        );
    }
 }
+
+class FavoriteTextWidget extends StatefulWidget{
+
+  _FavoriteTextWidgetState createState() => _FavoriteTextWidgetState();
+}
+
+class _FavoriteTextWidgetState extends State<FavoriteTextWidget>{
+
+  @override
+  Widget build(BuildContext context){
+    return Consumer<FavoriteChangeNotifier>(
+        builder : (context, notifier, _)=> Text(notifier.favoriteCount.toString()));
+  }
+}
+
+
 
