@@ -86,13 +86,16 @@ class RecipeScreen extends StatelessWidget {
         ),
         body: ListView(
             children: [
-              CachedNetworkImage(
-                imageUrl: recipe.imageUrl,
-                placeholder: (context,url) => Center(child: CircularProgressIndicator()),
-                errorWidget: (context,url, error) => Icon(Icons.error),
-                width: 600,
-                height: 240,
-                fit: BoxFit.cover,
+              Hero(
+                tag: "imageRecipe"+recipe.title,
+                child: CachedNetworkImage(
+                  imageUrl: recipe.imageUrl,
+                  placeholder: (context,url) => Center(child: CircularProgressIndicator()),
+                  errorWidget: (context,url, error) => Icon(Icons.error),
+                  width: 600,
+                  height: 240,
+                  fit: BoxFit.cover,
+                ),
               ),
               /* Image.asset( image avec des assets dans le dossier images
               'images/pizza.png',

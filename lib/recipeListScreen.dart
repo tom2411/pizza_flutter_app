@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/recipe.dart';
+import 'package:flutter_app/recipe_screen.dart';
 
 class RecipeListScreen extends StatefulWidget{
   @override
@@ -66,36 +67,47 @@ class RecipeItemWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8),
-      elevation: 8,
-      child: Row(
-        children: [
-          CachedNetworkImage(
-            imageUrl: recipe.imageUrl,
-            placeholder: (context, url)=>
-                Center (child: CircularProgressIndicator()),
-            errorWidget: (context,url,error)=> Icon(Icons.error),
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(recipe.title,
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                ),
-                Text(recipe.user,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 16))
-              ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+            context,
+            '/recipe',
+            arguments: recipe);
+      },
+      child: Card(
+        margin: EdgeInsets.all(8),
+        elevation: 8,
+        child: Row(
+          children: [
+            Hero(
+              tag: "imageRecipe"+recipe.title,
+              child: CachedNetworkImage(
+                imageUrl: recipe.imageUrl,
+                placeholder: (context, url)=>
+                    Center (child: CircularProgressIndicator()),
+                errorWidget: (context,url,error)=> Icon(Icons.error),
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(recipe.title,
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+                  ),
+                  Text(recipe.user,
+                    style: TextStyle(color: Colors.grey[500], fontSize: 16))
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
